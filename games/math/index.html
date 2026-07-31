@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>구름 계단 수학 탐험</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main>
+      <nav>
+        <strong>수학</strong>
+        <a href="../english/">영어</a>
+        <a href="../typing/">타자</a>
+        <a href="../../">게임 홈</a>
+      </nav>
+      <h1>구름 계단 수학 탐험</h1>
+      <p>← → 방향키로 움직이며 계단을 오르고 문제 구슬을 모으세요.</p>
+      <section class="game-wrap">
+        <canvas id="gameCanvas" width="800" height="500"></canvas>
+
+        <div id="startScreen" class="overlay">
+          <form id="startForm" class="panel start-panel">
+            <strong>수학 탐험 준비!</strong>
+            <label class="visible-label" for="playerName">사용자 이름</label>
+            <input
+              id="playerName"
+              type="text"
+              maxlength="12"
+              autocomplete="nickname"
+              placeholder="이름을 입력하세요"
+              required
+            />
+            <label class="visible-label" for="grade">학년 선택</label>
+            <select id="grade">
+              <option value="1">초등학교 1학년</option>
+              <option value="2">초등학교 2학년</option>
+              <option value="3">초등학교 3학년</option>
+              <option value="4">초등학교 4학년</option>
+              <option value="5">초등학교 5학년</option>
+              <option value="6">초등학교 6학년</option>
+            </select>
+            <button type="submit">게임 시작</button>
+            <div class="ranking">
+              <b>선택 학년 최고 기록</b>
+              <ol id="leaderboard"></ol>
+            </div>
+          </form>
+        </div>
+
+        <div id="quiz" class="overlay quiz" hidden>
+          <form id="quizForm" class="panel">
+            <strong id="quizLabel">수학 문제!</strong>
+            <div id="question" class="question">8 + 7 = ?</div>
+            <label for="answer">정답</label>
+            <input
+              id="answer"
+              type="number"
+              inputmode="decimal"
+              step="any"
+              required
+            />
+            <button id="submitAnswer" type="submit">정답 확인</button>
+            <p id="feedback" aria-live="polite"></p>
+          </form>
+        </div>
+
+        <div id="gameOver" class="overlay" hidden>
+          <div class="panel">
+            <strong>탐험 끝!</strong>
+            <p id="finalScore"></p>
+            <button id="restart" type="button">이름·학년 선택으로</button>
+          </div>
+        </div>
+      </section>
+      <p id="status" aria-live="polite">이름과 학년을 선택해 주세요.</p>
+    </main>
+    <script src="./game.js"></script>
+  </body>
+</html>
