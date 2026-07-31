@@ -176,3 +176,14 @@ canvas {
   color: #334155;
   font-weight: 700;
 }
+
+.mobile-controls { display: none; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+.mobile-controls button { min-height: 64px; border: 2px solid #38bdf8; border-radius: 16px; background: #0f2741; color: #f8fafc; font: 900 25px system-ui; touch-action: none; user-select: none; -webkit-user-select: none; }
+.mobile-controls button span { font-size: 16px; }
+.mobile-controls button.pressed { background: #0284c7; transform: translateY(2px); }
+
+@media (max-width: 820px), (pointer: coarse) {
+  body { place-items: start center; }
+  main { padding-bottom: 24px; }
+  .mobile-controls { display: grid; }
+}
