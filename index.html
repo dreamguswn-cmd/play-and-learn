@@ -15,7 +15,7 @@
 
   <main>
     <section id="home" class="hero">
-      <div class="hero-copy"><p class="eyebrow">PLAY · LEARN · GROW</p><h1>놀면서 배우는<br><em>교육용 웹게임</em></h1><p>국어, 수학, 기억력을 짧고 재미있는 게임으로 연습해 보세요. 설치 없이 웹에서 바로 시작할 수 있어요.</p><a class="primary" href="#games">게임 시작하기</a></div>
+      <div class="hero-copy"><p class="eyebrow">PLAY · LEARN · GROW</p><h1>놀면서 배우는<br><em>교육용 웹게임</em></h1><p>수학, 영어, 타자를 모험형 게임으로 연습해 보세요. 설치 없이 웹에서 바로 시작할 수 있어요.</p><a class="primary" href="#games">게임 시작하기</a></div>
       <div class="hero-art" aria-label="게임 캐릭터 장식"><span>가</span><span>7</span><span>★</span><strong>LEVEL<br>UP!</strong></div>
     </section>
 
@@ -24,21 +24,15 @@
     <section id="games" class="games-section">
       <p class="eyebrow">CHOOSE A GAME</p><h2>오늘은 무엇을 연습할까요?</h2>
       <div class="game-grid">
-        <article class="game-card korean"><div class="icon">가</div><span>국어 · 어휘</span><h3>맞춤법 탐험대</h3><p>두 단어 중 올바른 맞춤법을 골라 보세요.</p><button data-game="korean">플레이 →</button></article>
-        <article class="game-card math"><div class="icon">×</div><span>수학 · 연산</span><h3>두뇌 계산소</h3><p>제한 시간 안에 연산 문제를 해결해 보세요.</p><button data-game="math">플레이 →</button></article>
-        <article class="game-card memory"><div class="icon">◆</div><span>집중력 · 기억</span><h3>짝꿍 카드 찾기</h3><p>같은 그림 카드의 위치를 기억해 맞춰 보세요.</p><button data-game="memory">플레이 →</button></article>
+        <article class="game-card math"><div class="icon">×</div><span>수학 · 학년별 연산</span><h3>구름 계단 수학 탐험</h3><p>계단을 오르며 문제 구슬을 모으고 학년별 수학 문제를 풀어 보세요.</p><a class="play-link" href="games/math/">플레이 →</a></article>
+        <article class="game-card korean"><div class="icon">A</div><span>영어 · 단계별 학습</span><h3>알파벳 구름 탐험</h3><p>알파벳부터 단어와 문장까지 단계별 영어 미션에 도전해 보세요.</p><a class="play-link" href="games/english/">플레이 →</a></article>
+        <article class="game-card memory"><div class="icon">⌨</div><span>한글 · 타자 연습</span><h3>구름 타자 탐험</h3><p>떨어지는 낱글자, 단어, 문장을 정확하게 입력하며 타자 실력을 높여 보세요.</p><a class="play-link" href="games/typing/">플레이 →</a></article>
       </div>
-    </section>
-
-    <section id="play" class="play-section" hidden>
-      <div class="play-head"><div><p class="eyebrow">NOW PLAYING</p><h2 id="game-title">게임</h2></div><button id="close-game" class="ghost">게임 목록으로</button></div>
-      <div id="game-stage" class="game-stage"></div>
     </section>
 
     <section id="about" class="about"><div><p class="eyebrow">ABOUT THIS PROJECT</p><h2>학습을 재미있는 경험으로</h2></div><p>유현주 교육용 웹게임 LAB은 HTML, CSS, JavaScript로 제작한 반응형 게임 사이트입니다. 문제 제시, 정답 판정, 점수 계산, 진행 상태와 재시작 기능을 직접 구현했습니다.</p></section>
   </main>
 
   <footer><div><b>HYUNJU EDU GAME LAB</b><p>교육과 놀이를 연결하는 웹 프로젝트</p></div><a href="https://dreamguswn-cmd.github.io/QC-starter-edu1/">유현주 AI 포트폴리오로 돌아가기 →</a></footer>
-  <script src="script.js"></script>
 </body>
 </html>
