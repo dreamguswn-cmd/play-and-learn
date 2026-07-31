@@ -183,6 +183,24 @@ class InputController {
     });
     window.addEventListener("keyup", (event) => this.keys.delete(event.code));
     window.addEventListener("blur", () => this.keys.clear());
+    document.querySelectorAll("[data-key]").forEach((button) => {
+      const key = button.dataset.key;
+      const press = (event) => {
+        event.preventDefault();
+        button.setPointerCapture?.(event.pointerId);
+        this.keys.add(key);
+        button.classList.add("pressed");
+      };
+      const release = (event) => {
+        event.preventDefault();
+        this.keys.delete(key);
+        button.classList.remove("pressed");
+      };
+      button.addEventListener("pointerdown", press);
+      button.addEventListener("pointerup", release);
+      button.addEventListener("pointercancel", release);
+      button.addEventListener("lostpointercapture", release);
+    });
   }
 }
 
