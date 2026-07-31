@@ -51,7 +51,8 @@ class TextFactory {
 }
 
 class Character {
-  draw(context, cosmetics) {
+  draw(context, cosmetics, wardrobe) {
+    if (wardrobe?.draw(context, 350, 330, 100, 125)) return;
     const x = 380;
     const y = 412;
     if (cosmetics.has("반짝이 오라")) {
@@ -109,6 +110,7 @@ class Game {
     this.canvas = canvas;
     this.context = canvas.getContext("2d");
     this.elements = elements;
+    this.wardrobe = new CharacterWardrobe(elements.wardrobe);
     this.character = new Character();
     this.loop = this.loop.bind(this);
     this.lastTime = 0;
@@ -338,7 +340,8 @@ class Game {
     this.context.fillStyle = "#334155";
     this.context.fillRect(0, 402, this.canvas.width, 9);
     if (this.current) this.current.draw(this.context);
-    this.character.draw(this.context, this.unlockedCosmetics);
+    this.wardrobe.sync(this.score);
+    this.character.draw(this.context, this.unlockedCosmetics, this.wardrobe);
 
     const stageName = ["낱글자", "단어", "문장"][this.stage];
     this.context.fillStyle = "rgba(15,23,42,.82)";
@@ -395,5 +398,6 @@ const game = new Game(canvas, {
   final: document.querySelector("#finalScore"),
   restart: document.querySelector("#restart"),
   status: document.querySelector("#status"),
+  wardrobe: document.querySelector("#wardrobe"),
 });
 game.start();

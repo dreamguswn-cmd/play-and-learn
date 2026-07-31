@@ -34,7 +34,8 @@ class Player extends Entity {
     this.x = Math.max(0, Math.min(canvas.width - this.width, this.x));
   }
 
-  draw(context, cosmetics) {
+  draw(context, cosmetics, wardrobe) {
+    if (wardrobe?.draw(context, this.x - 18, this.y - 50, 76, 100)) return;
     if (cosmetics.has("무지개 오라")) {
       const gradient = context.createRadialGradient(
         this.x + 22, this.y + 25, 5,
@@ -209,6 +210,7 @@ class Game {
     this.canvas = canvas;
     this.context = canvas.getContext("2d");
     this.elements = elements;
+    this.wardrobe = new CharacterWardrobe(elements.wardrobe);
     this.input = new InputController();
     this.loop = this.loop.bind(this);
     this.isRunning = false;
@@ -472,7 +474,8 @@ class Game {
     }
 
     for (const orb of this.orbs) orb.draw(this.context);
-    this.player.draw(this.context, this.unlockedCosmetics);
+    this.wardrobe.sync(this.score);
+    this.player.draw(this.context, this.unlockedCosmetics, this.wardrobe);
 
     const stageName = ["알파벳", "단어", "문장"][this.stage];
     this.context.fillStyle = "rgba(15,23,42,.8)";
@@ -539,5 +542,6 @@ const game = new Game(canvas, {
   final: document.querySelector("#finalScore"),
   restart: document.querySelector("#restart"),
   status: document.querySelector("#status"),
+  wardrobe: document.querySelector("#wardrobe"),
 });
 game.start();

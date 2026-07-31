@@ -43,7 +43,8 @@ class Player extends Entity {
     this.velocityY = -465;
   }
 
-  draw(context, cosmetics = new Set()) {
+  draw(context, cosmetics = new Set(), wardrobe) {
+    if (wardrobe?.draw(context, this.x - 18, this.y - 50, 76, 100)) return;
     if (cosmetics.has("별빛 오라")) {
       const glow = context.createRadialGradient(
         this.x + 20, this.y + 24, 8,
@@ -297,6 +298,7 @@ class Game {
     this.canvas = canvas;
     this.context = canvas.getContext("2d");
     this.elements = elements;
+    this.wardrobe = new CharacterWardrobe(elements.wardrobe);
     this.input = new InputController();
     this.loop = this.loop.bind(this);
     this.lastTime = 0;
@@ -610,7 +612,8 @@ class Game {
 
     for (const platform of this.platforms) platform.draw(this.context);
     for (const orb of this.orbs) orb.draw(this.context);
-    this.player.draw(this.context, this.unlockedCosmetics);
+    this.wardrobe.sync(this.score);
+    this.player.draw(this.context, this.unlockedCosmetics, this.wardrobe);
 
     this.context.fillStyle = "rgba(15, 23, 42, 0.78)";
     this.context.fillRect(14, 12, 270, 62);
@@ -662,6 +665,7 @@ class Game {
 const canvas = document.querySelector("#gameCanvas");
 const game = new Game(canvas, {
   status: document.querySelector("#status"),
+  wardrobe: document.querySelector("#wardrobe"),
   startScreen: document.querySelector("#startScreen"),
   startForm: document.querySelector("#startForm"),
   name: document.querySelector("#playerName"),

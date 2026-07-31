@@ -1,0 +1,10 @@
+.wardrobe { margin: 16px 0; padding: 14px; border: 1px solid #475569; border-radius: 14px; background: #0f172a; }
+.wardrobe h2 { margin: 0 0 10px; font-size: 18px; color: #fef3c7; }
+.wardrobe-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.wardrobe button { min-height: 58px; padding: 7px; border: 2px solid #475569; border-radius: 10px; background: #1e293b; color: #f8fafc; font: 800 13px system-ui; cursor: pointer; }
+.wardrobe button small { display: block; margin-top: 3px; color: #93c5fd; font-size: 10px; }
+.wardrobe button.selected { border-color: #facc15; background: #713f12; }
+.wardrobe button:disabled { cursor: not-allowed; opacity: .48; }
+.wardrobe[data-new-outfit="true"] { animation: wardrobe-unlock .7s ease 2; border-color: #facc15; }
+@keyframes wardrobe-unlock { 50% { box-shadow: 0 0 28px #facc1599; transform: scale(1.01); } }
+@media (max-width: 600px) { .wardrobe-grid { grid-template-columns: 1fr 1fr; } }
