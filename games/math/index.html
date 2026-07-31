@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>구름 계단 수학 탐험</title>
     <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="../wardrobe.css" />
   </head>
   <body>
     <main>
@@ -77,8 +78,13 @@
         <button type="button" data-key="ArrowLeft" aria-label="왼쪽으로 이동">← <span>왼쪽</span></button>
         <button type="button" data-key="ArrowRight" aria-label="오른쪽으로 이동"><span>오른쪽</span> →</button>
       </div>
+      <section id="wardrobe" class="wardrobe" aria-label="캐릭터 의상 보관함">
+        <h2>✨ 캐릭터 의상 보관함</h2><div class="wardrobe-grid">
+          <button type="button" data-outfit="0">꽃무늬 원피스<small></small></button><button type="button" data-outfit="1">하늘빛 모험가<small></small></button><button type="button" data-outfit="2">별빛 드레스<small></small></button><button type="button" data-outfit="3">보라빛 마법사<small></small></button>
+        </div>
+      </section>
       <p id="status" aria-live="polite">이름과 학년을 선택해 주세요.</p>
     </main>
-    <script src="./game.js"></script>
+    <script src="../wardrobe.js"></script><script src="./game.js"></script>
   </body>
 </html>
