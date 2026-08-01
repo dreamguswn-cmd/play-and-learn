@@ -31,16 +31,16 @@ class CharacterWardrobe {
     this.boyImage = new Image();
     this.boyImage.src = "../../assets/character-outfits-boy.png";
     this.selectedGender = localStorage.getItem("edu-game-character-gender") === "boy" ? "boy" : "girl";
-    this.accessoryImage = new Image();
-    this.accessoryImage.src = "../../assets/accessories-v2.png";
+    this.petImage = new Image();
+    this.petImage.src = "../../assets/pet-companions.png";
     this.unlocked = Number(localStorage.getItem("edu-game-outfit-level") || 0);
     this.selected = Math.min(Number(localStorage.getItem("edu-game-selected-outfit") || 0), this.unlocked);
     this.unlockedItems = new Set(JSON.parse(localStorage.getItem("edu-game-unlocked-items") || "[]"));
     this.equippedItems = new Set(JSON.parse(localStorage.getItem("edu-game-equipped-items") || "[]"));
-    if (localStorage.getItem("edu-game-accessory-version") !== "2") {
+    if (localStorage.getItem("edu-game-accessory-version") !== "3") {
       this.equippedItems.clear();
       localStorage.setItem("edu-game-equipped-items", "[]");
-      localStorage.setItem("edu-game-accessory-version", "2");
+      localStorage.setItem("edu-game-accessory-version", "3");
     }
     const previousMilestone = CharacterWardrobe.outfits[this.unlocked]?.score || 0;
     CharacterWardrobe.items.forEach((item) => {
@@ -49,14 +49,14 @@ class CharacterWardrobe {
     localStorage.setItem("edu-game-unlocked-items", JSON.stringify([...this.unlockedItems]));
     this.createGenderPicker();
     const itemHeading = document.createElement("h3");
-    itemHeading.textContent = "🎁 아이템 보관함";
+    itemHeading.textContent = "🐾 애완동물 친구";
     const itemGrid = document.createElement("div");
     itemGrid.className = "item-grid";
     CharacterWardrobe.items.forEach((item) => {
       const button = document.createElement("button");
       button.type = "button";
       button.dataset.item = item.key;
-      button.append(`${item.key === "shoes" ? "👟" : item.key === "bag" ? "🎒" : item.key === "wand" ? "🪄" : "🧙"} ${item.name}`);
+      button.append(`${item.emoji} ${item.name}`);
       button.append(document.createElement("small"));
       itemGrid.append(button);
     });
@@ -80,8 +80,11 @@ class CharacterWardrobe {
     this.itemButtons.forEach((button) => button.addEventListener("click", () => {
       const key = button.dataset.item;
       if (!this.unlockedItems.has(key)) return;
-      if (this.equippedItems.has(key)) this.equippedItems.delete(key);
-      else this.equippedItems.add(key);
+      if (this.equippedItems.has(key)) this.equippedItems.clear();
+      else {
+        this.equippedItems.clear();
+        this.equippedItems.add(key);
+      }
       localStorage.setItem("edu-game-equipped-items", JSON.stringify([...this.equippedItems]));
       this.renderButtons();
     }));
@@ -154,7 +157,7 @@ class CharacterWardrobe {
       button.disabled = locked;
       button.classList.toggle("selected", equipped);
       button.setAttribute("aria-pressed", String(equipped));
-      button.querySelector("small").textContent = locked ? `${item.score}점에 획득` : equipped ? "착용 중 · 눌러서 벗기" : "눌러서 착용";
+      button.querySelector("small").textContent = locked ? `${item.score}점에 만나요` : equipped ? "함께하는 중 · 눌러서 쉬기" : "눌러서 함께하기";
     });
     this.preview?.querySelectorAll("[data-preview-outfit]").forEach((button) => {
       const index = Number(button.dataset.previewOutfit);
@@ -182,7 +185,7 @@ class CharacterWardrobe {
     const title = document.createElement("h2");
     title.textContent = "✨ 내 캐릭터 감상하기";
     const message = document.createElement("p");
-    message.textContent = "게임은 잠시 멈췄어요. 아래 보관함에서 옷과 아이템을 골라 보세요!";
+    message.textContent = "게임은 잠시 멈췄어요. 옷을 고르고 함께할 애완동물 친구를 만나 보세요!";
     this.previewCanvas = document.createElement("canvas");
     this.previewScale = Math.min(window.devicePixelRatio || 1, 2);
     this.previewCanvas.width = Math.round(280 * this.previewScale);
@@ -207,7 +210,7 @@ class CharacterWardrobe {
       outfitGrid.append(button);
     });
     const itemTitle = document.createElement("strong");
-    itemTitle.textContent = "🎁 아이템";
+    itemTitle.textContent = "🐾 애완동물";
     const itemChoiceGrid = document.createElement("div");
     itemChoiceGrid.className = "preview-choice-grid";
     CharacterWardrobe.items.forEach((item) => {
@@ -217,8 +220,11 @@ class CharacterWardrobe {
       button.textContent = item.name;
       button.addEventListener("click", () => {
         if (!this.unlockedItems.has(item.key)) return;
-        if (this.equippedItems.has(item.key)) this.equippedItems.delete(item.key);
-        else this.equippedItems.add(item.key);
+        if (this.equippedItems.has(item.key)) this.equippedItems.clear();
+        else {
+          this.equippedItems.clear();
+          this.equippedItems.add(item.key);
+        }
         localStorage.setItem("edu-game-equipped-items", JSON.stringify([...this.equippedItems]));
         this.renderButtons();
       });
@@ -235,7 +241,7 @@ class CharacterWardrobe {
     document.body.append(this.preview);
     this.image.addEventListener("load", () => this.drawPreview());
     this.boyImage.addEventListener("load", () => this.drawPreview());
-    this.accessoryImage.addEventListener("load", () => this.drawPreview());
+    this.petImage.addEventListener("load", () => this.drawPreview());
   }
 
   openPreview() {
@@ -322,47 +328,32 @@ class CharacterWardrobe {
 }
 
 CharacterWardrobe.items = [
-  { key: "shoes", name: "별빛 리본 구두", score: 30 },
-  { key: "bag", name: "꽃별 리본 가방", score: 90 },
-  { key: "wand", name: "별보석 마법봉", score: 180 },
-  { key: "hat", name: "달빛 마법사 모자", score: 240 },
+  { key: "puppy", name: "몽실 강아지", emoji: "🐶", score: 30 },
+  { key: "rabbit", name: "달빛 토끼", emoji: "🐰", score: 90 },
+  { key: "cat", name: "별빛 고양이", emoji: "🐱", score: 180 },
+  { key: "squirrel", name: "도토리 다람쥐", emoji: "🐿️", score: 240 },
 ];
 
-CharacterWardrobe.prototype.drawItems = function drawPrettyItems(context, x, y, width, height, layer = "front") {
-  if (!this.accessoryImage.complete || !this.accessoryImage.naturalWidth) return;
-  const cellWidth = this.accessoryImage.naturalWidth / 2;
-  const cellHeight = this.accessoryImage.naturalHeight / 2;
-  const placements = this.selectedGender === "boy"
-    ? {
-        shoes: [0, .31, .86, .38, .13],
-        bag: [1, .28, .22, .28, .28],
-        wand: [2, .58, .28, .20, .29],
-        hat: [3, .27, -.015, .46, .17],
-      }
-    : {
-        shoes: [0, .30, .86, .40, .13],
-        bag: [1, .27, .23, .29, .29],
-        wand: [2, .59, .29, .20, .29],
-        hat: [3, .26, -.015, .48, .18],
-      };
-  const drawCell = (index, dx, dy, dw, dh) => {
-    context.drawImage(
-      this.accessoryImage,
-      (index % 2) * cellWidth,
-      Math.floor(index / 2) * cellHeight,
-      cellWidth,
-      cellHeight,
-      x + dx * width,
-      y + dy * height,
-      dw * width,
-      dh * height
-    );
-  };
+CharacterWardrobe.prototype.drawItems = function drawPet(context, x, y, width, height, layer = "front") {
+  if (layer === "behind" || !this.petImage.complete || !this.petImage.naturalWidth) return;
+  const index = CharacterWardrobe.items.findIndex(({ key }) => this.equippedItems.has(key));
+  if (index < 0) return;
+  const cellWidth = this.petImage.naturalWidth / 2;
+  const cellHeight = this.petImage.naturalHeight / 2;
+  const petWidth = width * .42;
+  const petHeight = height * .27;
   context.save();
-  const keys = layer === "behind" ? ["bag"] : ["shoes", "wand", "hat"];
-  keys.forEach((key) => {
-    if (this.equippedItems.has(key)) drawCell(...placements[key]);
-  });
+  context.drawImage(
+    this.petImage,
+    (index % 2) * cellWidth,
+    Math.floor(index / 2) * cellHeight,
+    cellWidth,
+    cellHeight,
+    x - width * .03,
+    y + height * .70,
+    petWidth,
+    petHeight
+  );
   context.restore();
 };
 
