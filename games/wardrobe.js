@@ -11,7 +11,7 @@ class CharacterWardrobe {
   constructor(container) {
     this.container = container;
     this.image = new Image();
-    this.image.src = "../../assets/character-outfits.png";
+    this.image.src = "../../assets/character-outfits-transparent.png";
     this.unlocked = Number(localStorage.getItem("edu-game-outfit-level") || 0);
     this.selected = Math.min(
       Number(localStorage.getItem("edu-game-selected-outfit") || 0),
