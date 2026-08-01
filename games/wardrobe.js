@@ -10,6 +10,13 @@ class CharacterWardrobe {
     { name: "보라빛 마법사", score: 300 },
   ];
 
+  static boyOutfits = [
+    { name: "꽃무늬 셔츠", score: 0 },
+    { name: "하늘빛 모험가", score: 60 },
+    { name: "별빛 왕자", score: 150 },
+    { name: "보라빛 마법사", score: 300 },
+  ];
+
   static items = [
     { key: "shoes", name: "별빛 신발", score: 30 },
     { key: "bag", name: "모험 가방", score: 90 },
@@ -21,6 +28,9 @@ class CharacterWardrobe {
     this.container = container;
     this.image = new Image();
     this.image.src = "../../assets/character-outfits-transparent.png";
+    this.boyImage = new Image();
+    this.boyImage.src = "../../assets/character-outfits-boy.png";
+    this.selectedGender = localStorage.getItem("edu-game-character-gender") === "boy" ? "boy" : "girl";
     this.accessoryImage = new Image();
     this.accessoryImage.src = "../../assets/accessories-v2.png";
     this.unlocked = Number(localStorage.getItem("edu-game-outfit-level") || 0);
@@ -37,6 +47,7 @@ class CharacterWardrobe {
       if (item.score <= previousMilestone) this.unlockedItems.add(item.key);
     });
     localStorage.setItem("edu-game-unlocked-items", JSON.stringify([...this.unlockedItems]));
+    this.createGenderPicker();
     const itemHeading = document.createElement("h3");
     itemHeading.textContent = "🎁 아이템 보관함";
     const itemGrid = document.createElement("div");
@@ -77,6 +88,31 @@ class CharacterWardrobe {
     this.renderButtons();
   }
 
+  createGenderPicker() {
+    const nameInput = document.querySelector("#startForm input");
+    if (!nameInput) return;
+    const picker = document.createElement("fieldset");
+    picker.className = "character-gender-picker";
+    const legend = document.createElement("legend");
+    legend.textContent = "캐릭터 선택";
+    const girlButton = document.createElement("button");
+    girlButton.type = "button";
+    girlButton.dataset.gender = "girl";
+    girlButton.textContent = "👧 여자 캐릭터";
+    const boyButton = document.createElement("button");
+    boyButton.type = "button";
+    boyButton.dataset.gender = "boy";
+    boyButton.textContent = "👦 남자 캐릭터";
+    [girlButton, boyButton].forEach((button) => button.addEventListener("click", () => {
+      this.selectedGender = button.dataset.gender;
+      localStorage.setItem("edu-game-character-gender", this.selectedGender);
+      this.renderButtons();
+    }));
+    picker.append(legend, girlButton, boyButton);
+    nameInput.insertAdjacentElement("afterend", picker);
+    this.genderButtons = [girlButton, boyButton];
+  }
+
   sync(score) {
     const earned = CharacterWardrobe.outfits.reduce((level, outfit, index) => score >= outfit.score ? index : level, 0);
     let foundNewItem = false;
@@ -97,11 +133,18 @@ class CharacterWardrobe {
   }
 
   renderButtons() {
+    const activeOutfits = this.selectedGender === "boy" ? CharacterWardrobe.boyOutfits : CharacterWardrobe.outfits;
+    this.genderButtons?.forEach((button) => {
+      const selected = button.dataset.gender === this.selectedGender;
+      button.classList.toggle("selected", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    });
     this.outfitButtons.forEach((button, index) => {
-      const outfit = CharacterWardrobe.outfits[index];
+      const outfit = activeOutfits[index];
       const locked = index > this.unlocked;
       button.disabled = locked;
       button.classList.toggle("selected", index === this.selected);
+      button.childNodes[0].textContent = outfit.name;
       button.querySelector("small").textContent = locked ? `${outfit.score}점에 해금` : index === this.selected ? "착용 중" : "갈아입기";
     });
     this.itemButtons.forEach((button) => {
@@ -115,6 +158,7 @@ class CharacterWardrobe {
     });
     this.preview?.querySelectorAll("[data-preview-outfit]").forEach((button) => {
       const index = Number(button.dataset.previewOutfit);
+      button.textContent = activeOutfits[index].name;
       button.disabled = index > this.unlocked;
       button.classList.toggle("selected", index === this.selected);
     });
@@ -189,6 +233,7 @@ class CharacterWardrobe {
     this.preview.append(panel);
     document.body.append(this.preview);
     this.image.addEventListener("load", () => this.drawPreview());
+    this.boyImage.addEventListener("load", () => this.drawPreview());
     this.accessoryImage.addEventListener("load", () => this.drawPreview());
   }
 
@@ -206,7 +251,8 @@ class CharacterWardrobe {
   }
 
   drawPreview() {
-    if (!this.previewCanvas || this.preview.hidden || !this.image.complete || !this.image.naturalWidth) return;
+    const characterImage = this.selectedGender === "boy" ? this.boyImage : this.image;
+    if (!this.previewCanvas || this.preview.hidden || !characterImage.complete || !characterImage.naturalWidth) return;
     const context = this.previewCanvas.getContext("2d");
     context.clearRect(0, 0, this.previewCanvas.width, this.previewCanvas.height);
     const gradient = context.createLinearGradient(0, 0, 0, 320);
@@ -220,16 +266,17 @@ class CharacterWardrobe {
   }
 
   draw(context, x, y, width, height) {
-    if (!this.image.complete || !this.image.naturalWidth) return false;
-    const cellWidth = this.image.naturalWidth / 2;
-    const cellHeight = this.image.naturalHeight / 2;
+    const characterImage = this.selectedGender === "boy" ? this.boyImage : this.image;
+    if (!characterImage.complete || !characterImage.naturalWidth) return false;
+    const cellWidth = characterImage.naturalWidth / 2;
+    const cellHeight = characterImage.naturalHeight / 2;
     const sourceX = (this.selected % 2) * cellWidth;
     const sourceY = Math.floor(this.selected / 2) * cellHeight;
     context.save();
     context.beginPath();
     context.roundRect(x, y, width, height, 10);
     context.clip();
-    context.drawImage(this.image, sourceX, sourceY, cellWidth, cellHeight, x, y, width, height);
+    context.drawImage(characterImage, sourceX, sourceY, cellWidth, cellHeight, x, y, width, height);
     context.restore();
     this.drawItems(context, x, y, width, height);
     return true;

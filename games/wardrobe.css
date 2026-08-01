@@ -21,6 +21,10 @@
 .preview-choice-grid button.selected { border-color: #facc15; background: #713f12; }
 .preview-choice-grid button:disabled { opacity: .4; cursor: not-allowed; }
 .wardrobe-preview-panel .wardrobe-continue-button { width: 100%; min-height: 48px; border: 0; border-radius: 12px; background: #facc15; color: #422006; font: 900 16px system-ui; cursor: pointer; }
+.character-gender-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; padding: 9px; border: 1px solid #64748b; border-radius: 12px; }
+.character-gender-picker legend { padding: 0 6px; color: #fef3c7; font-weight: 800; }
+.character-gender-picker button { min-height: 44px; border: 2px solid #64748b; border-radius: 10px; background: #1e293b; color: #f8fafc; font: 800 13px system-ui; cursor: pointer; }
+.character-gender-picker button.selected { border-color: #facc15; background: #713f12; box-shadow: 0 0 0 2px #facc1533; }
 .wardrobe[data-new-outfit="true"] { animation: wardrobe-unlock .7s ease 2; border-color: #facc15; }
 @keyframes wardrobe-unlock { 50% { box-shadow: 0 0 28px #facc1599; transform: scale(1.01); } }
 @media (max-width: 600px) { .wardrobe-grid, .item-grid { grid-template-columns: 1fr 1fr; } }
