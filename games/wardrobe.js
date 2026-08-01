@@ -106,6 +106,16 @@ class CharacterWardrobe {
       button.setAttribute("aria-pressed", String(equipped));
       button.querySelector("small").textContent = locked ? `${item.score}점에 획득` : equipped ? "착용 중 · 눌러서 벗기" : "눌러서 착용";
     });
+    this.preview?.querySelectorAll("[data-preview-outfit]").forEach((button) => {
+      const index = Number(button.dataset.previewOutfit);
+      button.disabled = index > this.unlocked;
+      button.classList.toggle("selected", index === this.selected);
+    });
+    this.preview?.querySelectorAll("[data-preview-item]").forEach((button) => {
+      const key = button.dataset.previewItem;
+      button.disabled = !this.unlockedItems.has(key);
+      button.classList.toggle("selected", this.equippedItems.has(key));
+    });
     this.drawPreview();
   }
 
@@ -125,12 +135,50 @@ class CharacterWardrobe {
     this.previewCanvas = document.createElement("canvas");
     this.previewCanvas.width = 240;
     this.previewCanvas.height = 320;
+    const previewControls = document.createElement("div");
+    previewControls.className = "preview-controls";
+    const outfitTitle = document.createElement("strong");
+    outfitTitle.textContent = "👗 의상";
+    const outfitGrid = document.createElement("div");
+    outfitGrid.className = "preview-choice-grid";
+    CharacterWardrobe.outfits.forEach((outfit, index) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.dataset.previewOutfit = String(index);
+      button.textContent = outfit.name;
+      button.addEventListener("click", () => {
+        if (index > this.unlocked) return;
+        this.selected = index;
+        localStorage.setItem("edu-game-selected-outfit", String(index));
+        this.renderButtons();
+      });
+      outfitGrid.append(button);
+    });
+    const itemTitle = document.createElement("strong");
+    itemTitle.textContent = "🎁 아이템";
+    const itemChoiceGrid = document.createElement("div");
+    itemChoiceGrid.className = "preview-choice-grid";
+    CharacterWardrobe.items.forEach((item) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.dataset.previewItem = item.key;
+      button.textContent = item.name;
+      button.addEventListener("click", () => {
+        if (!this.unlockedItems.has(item.key)) return;
+        if (this.equippedItems.has(item.key)) this.equippedItems.delete(item.key);
+        else this.equippedItems.add(item.key);
+        localStorage.setItem("edu-game-equipped-items", JSON.stringify([...this.equippedItems]));
+        this.renderButtons();
+      });
+      itemChoiceGrid.append(button);
+    });
+    previewControls.append(outfitTitle, outfitGrid, itemTitle, itemChoiceGrid);
     const closeButton = document.createElement("button");
     closeButton.type = "button";
     closeButton.className = "wardrobe-continue-button";
     closeButton.textContent = "▶ 게임 계속하기";
     closeButton.addEventListener("click", () => this.closePreview());
-    panel.append(title, message, this.previewCanvas, closeButton);
+    panel.append(title, message, this.previewCanvas, previewControls, closeButton);
     this.preview.append(panel);
     document.body.append(this.preview);
     this.image.addEventListener("load", () => this.drawPreview());
