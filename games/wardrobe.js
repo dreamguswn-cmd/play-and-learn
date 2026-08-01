@@ -21,10 +21,17 @@ class CharacterWardrobe {
     this.container = container;
     this.image = new Image();
     this.image.src = "../../assets/character-outfits-transparent.png";
+    this.accessoryImage = new Image();
+    this.accessoryImage.src = "../../assets/accessories-v2.png";
     this.unlocked = Number(localStorage.getItem("edu-game-outfit-level") || 0);
     this.selected = Math.min(Number(localStorage.getItem("edu-game-selected-outfit") || 0), this.unlocked);
     this.unlockedItems = new Set(JSON.parse(localStorage.getItem("edu-game-unlocked-items") || "[]"));
     this.equippedItems = new Set(JSON.parse(localStorage.getItem("edu-game-equipped-items") || "[]"));
+    if (localStorage.getItem("edu-game-accessory-version") !== "2") {
+      this.equippedItems.clear();
+      localStorage.setItem("edu-game-equipped-items", "[]");
+      localStorage.setItem("edu-game-accessory-version", "2");
+    }
     const previousMilestone = CharacterWardrobe.outfits[this.unlocked]?.score || 0;
     CharacterWardrobe.items.forEach((item) => {
       if (item.score <= previousMilestone) this.unlockedItems.add(item.key);
@@ -182,6 +189,7 @@ class CharacterWardrobe {
     this.preview.append(panel);
     document.body.append(this.preview);
     this.image.addEventListener("load", () => this.drawPreview());
+    this.accessoryImage.addEventListener("load", () => this.drawPreview());
   }
 
   openPreview() {
@@ -259,5 +267,38 @@ class CharacterWardrobe {
     context.restore();
   }
 }
+
+CharacterWardrobe.items = [
+  { key: "shoes", name: "별빛 리본 구두", score: 30 },
+  { key: "bag", name: "꽃별 리본 가방", score: 90 },
+  { key: "wand", name: "별보석 마법봉", score: 180 },
+  { key: "hat", name: "달빛 마법사 모자", score: 240 },
+];
+
+CharacterWardrobe.prototype.drawItems = function drawPrettyItems(context, x, y, width) {
+  if (!this.accessoryImage.complete || !this.accessoryImage.naturalWidth) return;
+  const cellWidth = this.accessoryImage.naturalWidth / 2;
+  const cellHeight = this.accessoryImage.naturalHeight / 2;
+  const scale = width / 76;
+  const drawCell = (index, dx, dy, dw, dh) => {
+    context.drawImage(
+      this.accessoryImage,
+      (index % 2) * cellWidth,
+      Math.floor(index / 2) * cellHeight,
+      cellWidth,
+      cellHeight,
+      x + dx * scale,
+      y + dy * scale,
+      dw * scale,
+      dh * scale
+    );
+  };
+  context.save();
+  if (this.equippedItems.has("shoes")) drawCell(0, 12, 65, 52, 42);
+  if (this.equippedItems.has("bag")) drawCell(1, -5, 30, 45, 48);
+  if (this.equippedItems.has("wand")) drawCell(2, 48, 20, 40, 62);
+  if (this.equippedItems.has("hat")) drawCell(3, 1, -12, 74, 58);
+  context.restore();
+};
 
 window.CharacterWardrobe = CharacterWardrobe;
