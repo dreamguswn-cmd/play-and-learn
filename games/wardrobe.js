@@ -281,9 +281,10 @@ class CharacterWardrobe {
     context.beginPath();
     context.roundRect(x, y, width, height, 10);
     context.clip();
+    this.drawItems(context, x, y, width, height, "behind");
     context.drawImage(characterImage, sourceX, sourceY, cellWidth, cellHeight, x, y, width, height);
     context.restore();
-    this.drawItems(context, x, y, width, height);
+    this.drawItems(context, x, y, width, height, "front");
     return true;
   }
 
@@ -327,12 +328,23 @@ CharacterWardrobe.items = [
   { key: "hat", name: "달빛 마법사 모자", score: 240 },
 ];
 
-CharacterWardrobe.prototype.drawItems = function drawPrettyItems(context, x, y, width, height) {
+CharacterWardrobe.prototype.drawItems = function drawPrettyItems(context, x, y, width, height, layer = "front") {
   if (!this.accessoryImage.complete || !this.accessoryImage.naturalWidth) return;
   const cellWidth = this.accessoryImage.naturalWidth / 2;
   const cellHeight = this.accessoryImage.naturalHeight / 2;
-  const scaleX = width / 76;
-  const scaleY = height / 100;
+  const placements = this.selectedGender === "boy"
+    ? {
+        shoes: [0, .31, .86, .38, .13],
+        bag: [1, .28, .22, .28, .28],
+        wand: [2, .58, .28, .20, .29],
+        hat: [3, .27, -.015, .46, .17],
+      }
+    : {
+        shoes: [0, .30, .86, .40, .13],
+        bag: [1, .27, .23, .29, .29],
+        wand: [2, .59, .29, .20, .29],
+        hat: [3, .26, -.015, .48, .18],
+      };
   const drawCell = (index, dx, dy, dw, dh) => {
     context.drawImage(
       this.accessoryImage,
@@ -340,17 +352,17 @@ CharacterWardrobe.prototype.drawItems = function drawPrettyItems(context, x, y, 
       Math.floor(index / 2) * cellHeight,
       cellWidth,
       cellHeight,
-      x + dx * scaleX,
-      y + dy * scaleY,
-      dw * scaleX,
-      dh * scaleX
+      x + dx * width,
+      y + dy * height,
+      dw * width,
+      dh * height
     );
   };
   context.save();
-  if (this.equippedItems.has("shoes")) drawCell(0, 17, 82, 42, 28);
-  if (this.equippedItems.has("bag")) drawCell(1, -2, 38, 32, 35);
-  if (this.equippedItems.has("wand")) drawCell(2, 53, 30, 28, 50);
-  if (this.equippedItems.has("hat")) drawCell(3, 7, -5, 62, 38);
+  const keys = layer === "behind" ? ["bag"] : ["shoes", "wand", "hat"];
+  keys.forEach((key) => {
+    if (this.equippedItems.has(key)) drawCell(...placements[key]);
+  });
   context.restore();
 };
 
