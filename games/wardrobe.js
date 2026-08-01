@@ -184,8 +184,9 @@ class CharacterWardrobe {
     const message = document.createElement("p");
     message.textContent = "게임은 잠시 멈췄어요. 아래 보관함에서 옷과 아이템을 골라 보세요!";
     this.previewCanvas = document.createElement("canvas");
-    this.previewCanvas.width = 240;
-    this.previewCanvas.height = 320;
+    this.previewScale = Math.min(window.devicePixelRatio || 1, 2);
+    this.previewCanvas.width = Math.round(280 * this.previewScale);
+    this.previewCanvas.height = Math.round(360 * this.previewScale);
     const previewControls = document.createElement("div");
     previewControls.className = "preview-controls";
     const outfitTitle = document.createElement("strong");
@@ -254,15 +255,19 @@ class CharacterWardrobe {
     const characterImage = this.selectedGender === "boy" ? this.boyImage : this.image;
     if (!this.previewCanvas || this.preview.hidden || !characterImage.complete || !characterImage.naturalWidth) return;
     const context = this.previewCanvas.getContext("2d");
+    context.setTransform(1, 0, 0, 1, 0, 0);
     context.clearRect(0, 0, this.previewCanvas.width, this.previewCanvas.height);
-    const gradient = context.createLinearGradient(0, 0, 0, 320);
+    context.setTransform(this.previewScale, 0, 0, this.previewScale, 0, 0);
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = "high";
+    const gradient = context.createLinearGradient(0, 0, 0, 360);
     gradient.addColorStop(0, "#fde7f3");
     gradient.addColorStop(1, "#ddd6fe");
     context.fillStyle = gradient;
-    context.fillRect(0, 0, 240, 320);
+    context.fillRect(0, 0, 280, 360);
     context.fillStyle = "rgba(255,255,255,.7)";
-    context.beginPath(); context.ellipse(120, 286, 76, 18, 0, 0, Math.PI * 2); context.fill();
-    this.draw(context, 45, 16, 150, 270);
+    context.beginPath(); context.ellipse(140, 326, 88, 20, 0, 0, Math.PI * 2); context.fill();
+    this.draw(context, 45, 10, 190, 330);
   }
 
   draw(context, x, y, width, height) {

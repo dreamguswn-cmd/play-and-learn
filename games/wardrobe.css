@@ -13,7 +13,7 @@
 .wardrobe-preview-panel { width: min(92vw, 430px); max-height: 94vh; overflow: auto; padding: 18px; border: 2px solid #facc15; border-radius: 20px; background: #0f172a; text-align: center; color: #f8fafc; box-shadow: 0 24px 80px #000a; }
 .wardrobe-preview-panel h2 { margin: 0 0 6px; color: #fef3c7; }
 .wardrobe-preview-panel p { margin: 0 0 12px; color: #cbd5e1; font-size: 13px; }
-.wardrobe-preview-panel canvas { display: block; width: min(240px, 70vw); height: auto; margin: 0 auto 12px; border-radius: 18px; }
+.wardrobe-preview-panel canvas { display: block; width: min(280px, 78vw); height: auto; margin: 0 auto 12px; border-radius: 18px; image-rendering: auto; }
 .preview-controls { margin-bottom: 12px; text-align: left; }
 .preview-controls strong { display: block; margin: 8px 0 5px; color: #fef3c7; }
 .preview-choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
