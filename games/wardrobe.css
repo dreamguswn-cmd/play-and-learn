@@ -14,6 +14,12 @@
 .wardrobe-preview-panel h2 { margin: 0 0 6px; color: #fef3c7; }
 .wardrobe-preview-panel p { margin: 0 0 12px; color: #cbd5e1; font-size: 13px; }
 .wardrobe-preview-panel canvas { display: block; width: min(240px, 70vw); height: auto; margin: 0 auto 12px; border-radius: 18px; }
+.preview-controls { margin-bottom: 12px; text-align: left; }
+.preview-controls strong { display: block; margin: 8px 0 5px; color: #fef3c7; }
+.preview-choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.preview-choice-grid button { min-height: 38px; padding: 5px; border: 1px solid #64748b; border-radius: 9px; background: #1e293b; color: #f8fafc; font: 700 12px system-ui; cursor: pointer; }
+.preview-choice-grid button.selected { border-color: #facc15; background: #713f12; }
+.preview-choice-grid button:disabled { opacity: .4; cursor: not-allowed; }
 .wardrobe-preview-panel .wardrobe-continue-button { width: 100%; min-height: 48px; border: 0; border-radius: 12px; background: #facc15; color: #422006; font: 900 16px system-ui; cursor: pointer; }
 .wardrobe[data-new-outfit="true"] { animation: wardrobe-unlock .7s ease 2; border-color: #facc15; }
 @keyframes wardrobe-unlock { 50% { box-shadow: 0 0 28px #facc1599; transform: scale(1.01); } }
