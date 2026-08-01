@@ -275,11 +275,12 @@ CharacterWardrobe.items = [
   { key: "hat", name: "달빛 마법사 모자", score: 240 },
 ];
 
-CharacterWardrobe.prototype.drawItems = function drawPrettyItems(context, x, y, width) {
+CharacterWardrobe.prototype.drawItems = function drawPrettyItems(context, x, y, width, height) {
   if (!this.accessoryImage.complete || !this.accessoryImage.naturalWidth) return;
   const cellWidth = this.accessoryImage.naturalWidth / 2;
   const cellHeight = this.accessoryImage.naturalHeight / 2;
-  const scale = width / 76;
+  const scaleX = width / 76;
+  const scaleY = height / 100;
   const drawCell = (index, dx, dy, dw, dh) => {
     context.drawImage(
       this.accessoryImage,
@@ -287,17 +288,17 @@ CharacterWardrobe.prototype.drawItems = function drawPrettyItems(context, x, y, 
       Math.floor(index / 2) * cellHeight,
       cellWidth,
       cellHeight,
-      x + dx * scale,
-      y + dy * scale,
-      dw * scale,
-      dh * scale
+      x + dx * scaleX,
+      y + dy * scaleY,
+      dw * scaleX,
+      dh * scaleX
     );
   };
   context.save();
-  if (this.equippedItems.has("shoes")) drawCell(0, 12, 65, 52, 42);
-  if (this.equippedItems.has("bag")) drawCell(1, -5, 30, 45, 48);
-  if (this.equippedItems.has("wand")) drawCell(2, 48, 20, 40, 62);
-  if (this.equippedItems.has("hat")) drawCell(3, 1, -12, 74, 58);
+  if (this.equippedItems.has("shoes")) drawCell(0, 17, 82, 42, 28);
+  if (this.equippedItems.has("bag")) drawCell(1, -2, 38, 32, 35);
+  if (this.equippedItems.has("wand")) drawCell(2, 53, 30, 28, 50);
+  if (this.equippedItems.has("hat")) drawCell(3, 7, -5, 62, 38);
   context.restore();
 };
 
