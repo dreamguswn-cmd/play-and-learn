@@ -313,7 +313,7 @@ class Game {
   loop(time) {
     const deltaTime = Math.min((time - this.lastTime) / 1000, 0.04);
     this.lastTime = time;
-    if (!this.paused && !this.gameOver) this.update(deltaTime);
+    if (!this.paused && !this.gameOver && !window.eduGameWardrobePaused) this.update(deltaTime);
     this.render();
     requestAnimationFrame(this.loop);
   }
